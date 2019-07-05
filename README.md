@@ -6,8 +6,6 @@
 
 ## Install
 
-
-
 ```sh
 go get -u github.com/scriptllh/tfg
 ```
