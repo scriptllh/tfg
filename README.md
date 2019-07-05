@@ -80,7 +80,7 @@ func main() {
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page]().
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/scriptllh/tfg/issues).
 
 ## Show your support
 
