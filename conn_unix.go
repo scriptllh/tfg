@@ -99,6 +99,7 @@ func (c *conn) Close() error {
 		c.s.connManager.decConnCount()
 		pollEvent.decConnCount()
 		c.setConnClosed()
+		c.s.connManager.connCache.Put(c)
 	})
 	return err
 }

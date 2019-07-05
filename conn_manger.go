@@ -17,10 +17,11 @@ type ConnManger interface {
 }
 
 type connManager struct {
-	conns     *sync.Map
-	connCount int64
-	connCache *sync.Pool
-	inCache   *sync.Pool
+	conns          *sync.Map
+	connCount      int64
+	connCache      *sync.Pool
+	inCache        *sync.Pool
+	handleReqCache *sync.Pool
 }
 
 func (m *connManager) getIn() {

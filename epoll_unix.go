@@ -104,8 +104,8 @@ func (e *pollEvent) accept(fd int) error {
 
 func (e *pollEvent) read(c *conn) {
 	for {
-		in := e.s.connManager.inCache.Get().([]byte)
-		n, err := unix.Read(c.fd, in)
+		cw := e.s.connManager.inCache.Get().(*connWorker)
+		n, err := unix.Read(c.fd, cw.in)
 		if n == 0 || err != nil {
 			if err == unix.EAGAIN {
 				return
@@ -113,9 +113,7 @@ func (e *pollEvent) read(c *conn) {
 			c.setConnNeedClosed()
 			return
 		}
-		c.s.poolHandle.handleConn(&connWorker{
-			conn: c,
-			in:   in,
-		})
+		cw.conn = c
+		c.s.poolHandle.handleConn(cw)
 	}
 }

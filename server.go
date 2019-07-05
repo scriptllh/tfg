@@ -83,12 +83,17 @@ func NewServer(addr string, HandleConn HandleConn, numPollEvent int, acceptBalan
 			conns: &sync.Map{},
 			inCache: &sync.Pool{
 				New: func() interface{} {
-					return make([]byte, defaultInLen)
+					return &connWorker{in: make([]byte, defaultInLen)}
 				},
 			},
 			connCache: &sync.Pool{
 				New: func() interface{} {
 					return &conn{}
+				},
+			},
+			handleReqCache: &sync.Pool{
+				New: func() interface{} {
+					return &handleReq{}
 				},
 			},
 		},
@@ -100,6 +105,7 @@ func NewServer(addr string, HandleConn HandleConn, numPollEvent int, acceptBalan
 			if req.conn.isNeedClose() {
 				req.conn.Close()
 			}
+			s.connManager.handleReqCache.Put(req)
 		}()
 		s.handleConn.Handle(req.conn, req.packet)
 	})

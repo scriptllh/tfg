@@ -51,12 +51,13 @@ func (w *WorkerHandle) run() {
 			}
 			packet, remain, isFinRead, isHandle = w.pool.read(connWorker.in, remain)
 			if isHandle {
-				w.pool.s.pool.Serve(&handleReq{
-					conn:   connWorker.conn,
-					packet: packet,
-				})
+				req := w.pool.s.connManager.handleReqCache.Get().(*handleReq)
+				req.conn = connWorker.conn
+				req.packet = packet
+				w.pool.s.pool.Serve(req)
 			}
 			if isFinRead {
+				w.pool.s.connManager.inCache.Put(connWorker)
 				if ok := w.pool.revertWorker(w); !ok {
 					break
 				}
