@@ -23,6 +23,7 @@ type WorkerHandle struct {
 type connWorker struct {
 	conn *conn
 	in   []byte
+	n    int
 }
 
 func (w *WorkerHandle) run() {
@@ -49,7 +50,7 @@ func (w *WorkerHandle) run() {
 				w.pool.workerCache.Put(w)
 				return
 			}
-			packet, remain, isFinRead, isHandle = w.pool.read(connWorker.in, remain)
+			packet, remain, isFinRead, isHandle = w.pool.read(connWorker.in[:connWorker.n], remain)
 			if isHandle {
 				req := w.pool.s.connManager.handleReqCache.Get().(*handleReq)
 				req.conn = connWorker.conn

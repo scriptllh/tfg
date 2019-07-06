@@ -114,6 +114,7 @@ func (e *pollEvent) read(c *conn) {
 			return
 		}
 		cw.conn = c
+		cw.n = n
 		c.s.poolHandle.handleConn(cw)
 	}
 }
