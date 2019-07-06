@@ -107,7 +107,7 @@ func NewServer(addr string, HandleConn HandleConn, numPollEvent int, acceptBalan
 			}
 			s.connManager.handleReqCache.Put(req)
 		}()
-		s.handleConn.Handle(req.conn, req.packet)
+		s.handleConn.Handle(req.conn, req.packet, req.err)
 	})
 	if err != nil {
 		return nil, err

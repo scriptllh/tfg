@@ -53,9 +53,9 @@ type PoolHandle struct {
 
 	cond *sync.Cond
 
-	read func(in []byte, lastRemain []byte) (packet interface{}, remain []byte, isFinRead bool, isHandle bool)
+	read func(in []byte, lastRemain []byte) (packet interface{}, remain []byte, isFinRead bool, isHandle bool, err error)
 
-	handle func(conn Conn, packet interface{})
+	handle func(conn Conn, packet interface{}, err error)
 
 	once sync.Once
 
@@ -112,12 +112,12 @@ func (p *PoolHandle) periodicallyPurge() {
 }
 
 func NewPoolHandle(size int, read func(in []byte, lastRemain []byte) (packet interface{},
-	remain []byte, isFinRead bool, isHandle bool), handle func(conn Conn, packet interface{}), s *server) (*PoolHandle, error) {
+	remain []byte, isFinRead bool, isHandle bool, err error), handle func(conn Conn, packet interface{}, err error), s *server) (*PoolHandle, error) {
 	return NewTimingPoolHandle(size, defaultPoolHandleCleanIntervalTime, read, handle, s)
 }
 
 func NewTimingPoolHandle(size, expiry int, read func(in []byte, lastRemain []byte) (packet interface{},
-	remain []byte, isFinRead bool, isHandle bool), handle func(conn Conn, packet interface{}), s *server) (*PoolHandle, error) {
+	remain []byte, isFinRead bool, isHandle bool, err error), handle func(conn Conn, packet interface{}, err error), s *server) (*PoolHandle, error) {
 	if size <= 0 {
 		return nil, ErrInvalidPoolSize
 	}

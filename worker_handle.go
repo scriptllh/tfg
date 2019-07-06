@@ -44,17 +44,19 @@ func (w *WorkerHandle) run() {
 		var remain []byte
 		var packet interface{}
 		var isFinRead, isHandle bool
+		var err error
 		for connWorker := range w.connCh {
 			if nil == connWorker || connWorker.conn == nil {
 				w.pool.decRunning()
 				w.pool.workerCache.Put(w)
 				return
 			}
-			packet, remain, isFinRead, isHandle = w.pool.read(connWorker.in[:connWorker.n], remain)
+			packet, remain, isFinRead, isHandle, err = w.pool.read(connWorker.in[:connWorker.n], remain)
 			if isHandle {
 				req := w.pool.s.connManager.handleReqCache.Get().(*handleReq)
 				req.conn = connWorker.conn
 				req.packet = packet
+				req.err = err
 				w.pool.s.pool.Serve(req)
 			}
 			if isFinRead {
