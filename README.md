@@ -13,10 +13,7 @@ go get -u github.com/scriptllh/tfg
 
 ## Usage
 
-```sh
-echo
-
-
+```go
 package main
 
 import (
@@ -85,14 +82,13 @@ func main() {
 		return
 	}
 }
-
-
 ```
 
 ## Run
 
-```sh
-git clone https://github.com/scriptllh/tfg-example.git
+```
+$ git clone https://github.com/scriptllh/tfg-example.git
+
 1. echo 
      * make dev
      * 用PacketSender访问
